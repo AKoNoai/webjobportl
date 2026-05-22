@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { addJobsPageStyles as s } from '../assets/dummyStyles';
 import { Briefcase, X, Image as ImageIcon, Upload, Building2, Building,Trash2, Code2, Plus, MapPin, DollarSign, Calendar, Tag, User, FileText, ListChecks, GraduationCap, Loader2 } from 'lucide-react';
+import { apiUrl } from '../utils/api';
 
 // small toast component
 const Toast = ({ message, type, onClose }) => {
@@ -387,7 +388,7 @@ const validateForm = () => {
 
             const token = localStorage.getItem("token");
             const response = await axios.post(
-            "http://localhost:5000/api/job",
+            apiUrl('/job'),
             formDataToSend,
             {
                 headers: {

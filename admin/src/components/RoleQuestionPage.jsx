@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
 import { roleQuestionPageStyles as s } from '../assets/dummyStyles'
+import { apiUrl } from '../utils/api';
 import { 
   AlertCircle, 
   Briefcase, 
@@ -215,7 +216,7 @@ const RoleQuestionPage = () => {
       formDataToSend.append("questionsData", JSON.stringify(questions));
 
       const response = await axios.post(
-        "http://localhost:5000/api/interview/role", 
+        apiUrl('/interview/role'), 
         formDataToSend, {
         headers: {
           "Content-Type": "multipart/form-data",

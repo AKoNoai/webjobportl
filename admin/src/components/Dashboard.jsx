@@ -12,6 +12,7 @@ import {
   X
  } from 'lucide-react';
 import { Filter, Search } from 'lucide-react';
+import { apiUrl, assetUrl } from '../utils/api';
 
 const Dashboard = () => {
   const emptyStats = {
@@ -49,7 +50,7 @@ const Dashboard = () => {
 
             // to fetch stats
             const statsRes = await fetch(
-              "http://localhost:5000/api/job/admin/stats",
+              apiUrl('/job/admin/stats'),
 
               {
                 headers: { Authorization: `Bearer ${token}` },
@@ -68,7 +69,7 @@ const Dashboard = () => {
 
             // to fetch the jobs
             const jobsRes = await fetch(
-              "http://localhost:5000/api/job/admin/jobs",
+              apiUrl('/job/admin/jobs'),
               {
                 headers: { Authorization: `Bearer ${token}` },
               }
@@ -83,7 +84,7 @@ const Dashboard = () => {
                 category: j.category,
                 logo: j.companyLogo?.startsWith("http")
                   ? j.companyLogo
-                  : `http://localhost:5000${j.companyLogo || ""}`,
+                  : assetUrl(j.companyLogo || ""),
                 applicants: j.applicantsCount ?? j.applicationCount ?? 0,
                 status: j.status || "active",
               }));
@@ -122,7 +123,7 @@ const Dashboard = () => {
         setToast(null);
         try {
           const token = localStorage.getItem("token");
-          const res = await fetch(`http://localhost:5000/api/job/${jobId}/close`, {
+          const res = await fetch(apiUrl(`/job/${jobId}/close`), {
             method: "PATCH",
             headers: { 
               Authorization: `Bearer ${token}`,
@@ -135,7 +136,7 @@ const Dashboard = () => {
             setToast({ message: "Công việc đã được hoàn tất.", type: "success" });
             // refresh the stats 
             const statsRes = await fetch(
-              "http://localhost:5000/api/job/admin/stats",
+              apiUrl('/job/admin/stats'),
               {
                 headers: { Authorization: `Bearer ${token}` },
               }
@@ -152,7 +153,7 @@ const Dashboard = () => {
             }
 
             const jobsRes = await fetch(
-              "http://localhost:5000/api/job/admin/jobs",
+              apiUrl('/job/admin/jobs'),
               { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -166,7 +167,7 @@ const Dashboard = () => {
                 category: j.category,
                 logo: j.companyLogo?.startsWith("http")
                   ? j.companyLogo
-                  : `http://localhost:5000${j.companyLogo || ""}`,
+                  : assetUrl(j.companyLogo || ""),
                 applicants: j.applicantsCount ?? j.applicationCount ?? 0,
                 status: j.status || "active",
               }));

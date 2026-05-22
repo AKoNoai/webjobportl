@@ -3,6 +3,7 @@ import { loginPageStyles as s } from '../assets/dummyStyles';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AlertCircle, CheckCircle, Eye, EyeOff, Lock, Mail, LogIn, X } from 'lucide-react';
+import { apiUrl } from '../utils/api';
 
 const LoginPage = () => {
 
@@ -40,7 +41,7 @@ const LoginPage = () => {
             }
 
             try {
-                const res = await axios.post("http://localhost:5000/api/auth/login", { 
+                const res = await axios.post(apiUrl('/auth/login'), { 
                     email, 
                     password, 
                 });

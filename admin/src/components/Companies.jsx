@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { companiesPageStyles as s } from '../assets/dummyStyles';
 import axios from 'axios';
 import { CheckCircle, X, Upload, Link2, Trash2, Loader2 } from 'lucide-react';
+import { apiUrl } from '../utils/api';
 
 const Companies = () => {
 
@@ -21,7 +22,7 @@ useEffect(() => {
     const fetchCompanies = async () => {
         try{
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/company/', {
+            const res = await axios.get(apiUrl('/company/'), {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -96,7 +97,7 @@ const handleLogoChange = (e) => {
         formData.append('website', website);
 
         const res = await axios.post(
-            "http://localhost:5000/api/company/", 
+            apiUrl('/company/'), 
             formData, 
             {
             headers: { 'Authorization': `Bearer ${token}` },
@@ -134,7 +135,7 @@ const requestDeleteCompany = (companyId) => {
 const handleConfirmDelete = async () => {
     try{
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/company/${pendingDeleteId}`, {
+        await axios.delete(apiUrl(`/company/${pendingDeleteId}`), {
             headers: { 'Authorization': `Bearer ${token}` },
         });
         setCompanies(prev => prev.filter(c => c._id !== pendingDeleteId));

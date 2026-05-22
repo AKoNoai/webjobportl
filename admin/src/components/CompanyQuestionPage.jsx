@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { companyQuestionPageStyles as s } from '../assets/dummyStyles'
 import axios from 'axios';
 import { CheckCircle, XCircle, X, Building2, FileText, Upload, HelpCircle, CircleDashed, Download, Lightbulb, Loader2} from 'lucide-react';
+import { apiUrl } from '../utils/api';
 
 // Helper functions
 // Parses a string like "10k+", "2k+", "500", etc. into a number
@@ -256,7 +257,7 @@ const handleSubmit = async (e) => {
 
             const token = localStorage.getItem("token");
             const response = await axios.post(
-                "http://localhost:5000/api/interview", 
+                apiUrl('/interview'), 
                 formDataToSend,
                 {
                     headers: {

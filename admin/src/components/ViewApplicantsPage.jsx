@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { viewApplicantsPageStyles as s } from '../assets/dummyStyles'
 import { ArrowLeft, Briefcase, Calendar, Mail, Phone, Users } from "lucide-react"
 import { useLocation, useNavigate } from 'react-router-dom'
+import { apiUrl } from '../utils/api';
 
 
 const ViewApplicantsPage = () => {
@@ -22,7 +23,7 @@ const ViewApplicantsPage = () => {
             try{
                 const token = localStorage.getItem('token');
                 const res = await fetch(
-                    `http://localhost:5000/api/application/${jobId}/applicants`, {
+                    apiUrl(`/application/${jobId}/applicants`), {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -63,7 +64,7 @@ const ViewApplicantsPage = () => {
 
     const handleViewResume = (resumeUrl, userId) => {
         if (!resumeUrl) return;
-        const fullUrl = `http://localhost:5000/api/user/resume/${userId}`;
+        const fullUrl = apiUrl(`/user/resume/${userId}`);
         const link = document.createElement("a");
         link.href = fullUrl;
         link.target = "_blank";

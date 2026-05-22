@@ -25,6 +25,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { listJobsStyles as s, getBadgeClasses } from "../assets/dummyStyles";
+import { apiUrl, assetUrl } from '../utils/api';
 
 const Badge = ({ children, variant = "default", onRemove, className = "" }) => {
   return (
@@ -81,7 +82,7 @@ export default function ListJobs() {
         bJob.companyLogo?.startsWith("http") ||
         bJob.companyLogo?.startsWith("data:")
           ? bJob.companyLogo
-          : `http://localhost:5000${bJob.companyLogo || ""}`,
+          : assetUrl(bJob.companyLogo || ""),
       role: bJob.roleName,
       company: bJob.companyName,
       techstack: bJob.techStack,
@@ -107,7 +108,7 @@ export default function ListJobs() {
   const fetchJobs = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/job/admin/jobs", {
+      const res = await axios.get(apiUrl('/job/admin/jobs'), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.data.success) {
@@ -144,7 +145,7 @@ export default function ListJobs() {
       return;
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.delete(`http://localhost:5000/api/job/${id}`, {
+      const res = await axios.delete(apiUrl(`/job/${id}`), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.data.success) {
@@ -225,7 +226,7 @@ export default function ListJobs() {
       }
 
       const res = await axios.put(
-        `http://localhost:5000/api/job/${editingJob.id}`,
+        apiUrl(`/job/${editingJob.id}`),
         formDataToSend,
         {
           headers: {
