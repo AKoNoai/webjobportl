@@ -145,6 +145,10 @@ const handleSave = async () => {
       formData.append("email", profile.email);
       formData.append("phone", profile.phone);
 
+      if (!profile.resume && originalProfile.resume) {
+        formData.append("resumeDeleted", "true");
+      }
+
       if (profile.resume instanceof File) {
         formData.append("resume", profile.resume);
       }

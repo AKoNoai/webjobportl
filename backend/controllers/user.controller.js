@@ -30,10 +30,16 @@ export const updateProfile = async (req, res) => {
     try {
         const { name, email, phone } = req.body;
         const updateData = {};
+        const resumeDeleted = req.body.resumeDeleted === "true" || req.body.resumeDeleted === true;
 
         if (name) updateData.name = name;
         if (email) updateData.email = email;
         if (phone) updateData.phone = phone;
+
+        if (resumeDeleted) {
+            updateData.resume = "";
+            updateData.resumePublicId = "";
+        }
 
         // Cập nhật sơ yếu lý lịch cho người tìm việc
         if (req.file && req.user.role === "user") {
