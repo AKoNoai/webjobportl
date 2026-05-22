@@ -38,7 +38,7 @@ const ViewApplicantsPage = () => {
                     phone: app.phone,
                     appliedForRole: role || data.jobName,
                     appliedAt: app.appliedDate,
-                    resumeFile: app.resume,
+                    resumeFile: (app.resume || "").trim(),
                     userId: app._id,
                 }));
                 setFiltered(mapped);
@@ -155,7 +155,7 @@ const ViewApplicantsPage = () => {
                                     
 
                                     <div className={s.buttonWrapper}>
-                                        {app.resumeFile ? (
+                                        {Boolean(app.resumeFile) ? (
                                             <button onClick={() =>
                                                 handleViewResume(app.resumeFile, app.userId)
                                             } className={s.resumeButton}>

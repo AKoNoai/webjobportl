@@ -82,7 +82,8 @@ export const getApplicants = async (req, res) => {
                 applicationId: app._id,
                 ...app.user._doc, // thông tin người dùng
                 appliedDate: app.createdAt, // thời gian nộp đơn
-                resume: app.user.resume || "" // link hồ sơ
+                     resume: (app.user.resume || "").trim(), // link hồ sơ
+                     resumePublicId: (app.user.resumePublicId || "").trim(),
              })),
         });
     }
