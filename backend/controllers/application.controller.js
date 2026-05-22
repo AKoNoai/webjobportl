@@ -2,16 +2,18 @@ import Application from "../models/application.model.js";
 import Job from "../models/job.model.js";
 import User from "../models/user.model.js";
 
+const getRequestUserId = (req) => req.user?._id || req.user?.id;
+
 // user nộp đơn ứng tuyển
 export const applyJob = async (req, res) => {
     try {
         const jobId = req.params.id;
-        const userId = req.user._id;
+        const userId = getRequestUserId(req);
 
-        if (!jobId) {
+        if (!jobId || !userId) {
             return res.status(400).json({
                 success: false,
-                message: "Vui lòng cung cấp ID công việc",
+                message: "Vui lòng cung cấp thông tin ứng tuyển hợp lệ",
             });
         }
 
@@ -36,9 +38,10 @@ export const applyJob = async (req, res) => {
         // check if user already applied
         const existingApplication = await Application.findOne({ job: jobId, user: userId });
         if (existingApplication) {
-            return res.status(400).json({
-                success: false,
-                message: "Bạn đã nộp đơn cho công việc này rồi",
+            return res.status(200).json({
+                success: true,
+                alreadyApplied: true,
+                message: "You have already applied for this job",
             });
         }
 

@@ -15,6 +15,7 @@ import {
 import Toast from "./Toast";
 import { jobDetailPageStyles as s } from "../assets/dummyStyles";
 import { apiUrl, assetUrl } from '../utils/api';
+import { isAlreadyAppliedMessage } from '../utils/application';
 
 const STORAGE_USER_KEY = "jobportal_user";
 const STORAGE_JOBS_KEY = "savedJobs";
@@ -335,18 +336,26 @@ const JobDetailPage = () => {
         applyJobOnce(confirmToast.jobId);
         setToast({
           show: true,
-          message: "Application submitted successfully!",
+          message: data.alreadyApplied
+            ? "You have already applied for this job."
+            : "Application submitted successfully!",
           type: "success",
         });
       } else {
-        if (data.message === "You have already applied for this job") {
+        if (isAlreadyAppliedMessage(data.message)) {
           applyJobOnce(confirmToast.jobId);
+          setToast({
+            show: true,
+            message: data.message,
+            type: "success",
+          });
+        } else {
+          setToast({
+            show: true,
+            message: data.message || "Failed to submit application.",
+            type: "error",
+          });
         }
-        setToast({
-          show: true,
-          message: data.message || "Failed to submit application.",
-          type: "error",
-        });
       }
     } catch (error) {
       console.error("Error applying for job:", error);
