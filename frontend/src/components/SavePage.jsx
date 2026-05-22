@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Toast from "./Toast";
 import { savePageStyles as s } from "../assets/dummyStyles";
+import { apiUrl, assetUrl } from '../utils/api';
 
 const STORAGE_USER_KEY = "jobportal_user";
 const STORAGE_JOBS_KEY = "savedJobs";
@@ -116,11 +117,11 @@ const SavePage = () => {
       }
 
       const [savedRes, rolesRes, companiesRes] = await Promise.all([
-        fetch("http://localhost:5000/api/saved", {
+        fetch(apiUrl('/saved'), {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:5000/api/interview/roles"),
-        fetch("http://localhost:5000/api/interview/companies"),
+        fetch(apiUrl('/interview/roles')),
+        fetch(apiUrl('/interview/companies')),
       ]);
 
       const savedData = await savedRes.json();
@@ -203,7 +204,7 @@ const SavePage = () => {
         : ["interview", rawId];
 
       const res = await fetch(
-        `http://localhost:5000/api/saved/question/${id}?type=${kind}`,
+        apiUrl(`/saved/question/${id}?type=${kind}`),
         {
           method: "POST",
           headers: {
@@ -226,7 +227,7 @@ const SavePage = () => {
       const token = rawUser ? JSON.parse(rawUser).token : null;
       if (!token) return;
 
-      const res = await fetch(`http://localhost:5000/api/saved/job/${jobId}`, {
+      const res = await fetch(apiUrl(`/saved/job/${jobId}`), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -313,7 +314,7 @@ const SavePage = () => {
         company: job.companyName,
         logo: job.companyLogo?.startsWith("http")
           ? job.companyLogo
-          : `http://localhost:5000${job.companyLogo || ""}`,
+          : assetUrl(job.companyLogo || ""),
         datePosted: job.postDate || job.createdAt,
       },
       raw: String(job._id),
@@ -449,7 +450,7 @@ const SavePage = () => {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/api/user/profile", {
+      const res = await fetch(apiUrl('/user/profile'), {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -514,7 +515,7 @@ const SavePage = () => {
       }
 
       const res = await fetch(
-        `http://localhost:5000/api/application/apply/${confirmToast.jobId}`,
+        apiUrl(`/application/apply/${confirmToast.jobId}`),
         {
           method: "POST",
           headers: {

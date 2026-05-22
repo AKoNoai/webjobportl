@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Toast from "./Toast";
 import { findJobPageStyles as s } from "../assets/dummyStyles";
+import { apiUrl, assetUrl } from '../utils/api';
 
 const STORAGE_JOBS_KEY = "savedJobs";
 const STORAGE_APPLIED_KEY = "appliedJobs";
@@ -154,7 +155,7 @@ const FindJobPage = () => {
         return;
       }
 
-      const res = await fetch(`http://localhost:5000/api/saved/job/${jobId}`, {
+      const res = await fetch(apiUrl(`/saved/job/${jobId}`), {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -224,7 +225,7 @@ const FindJobPage = () => {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/api/user/profile", {
+      const res = await fetch(apiUrl('/user/profile'), {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -289,7 +290,7 @@ const FindJobPage = () => {
       }
 
       const res = await fetch(
-        `http://localhost:5000/api/application/apply/${confirmToast.jobId}`,
+        apiUrl(`/application/apply/${confirmToast.jobId}`),
         {
           method: "POST",
           headers: {
@@ -337,7 +338,7 @@ const FindJobPage = () => {
         const token = rawUser ? JSON.parse(rawUser).token : null;
         if (!token) return;
 
-        const res = await fetch("http://localhost:5000/api/application/user", {
+        const res = await fetch(apiUrl('/application/user'), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -364,7 +365,7 @@ const FindJobPage = () => {
         const token = rawUser ? JSON.parse(rawUser).token : null;
         if (!token) return;
 
-        const res = await fetch("http://localhost:5000/api/saved", {
+        const res = await fetch(apiUrl('/saved'), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -419,9 +420,7 @@ const FindJobPage = () => {
       if (filters.minSalary) params.append("minSalary", filters.minSalary);
       if (filters.maxSalary) params.append("maxSalary", filters.maxSalary);
 
-      const res = await fetch(
-        `http://localhost:5000/api/job?${params.toString()}`,
-      );
+      const res = await fetch(apiUrl(`/job?${params.toString()}`));
       const data = await res.json();
 
       if (data.success) {
@@ -434,10 +433,7 @@ const FindJobPage = () => {
               const path = job.companyLogo.startsWith("/")
                 ? job.companyLogo
                 : `/${job.companyLogo}`;
-              logoSrc = `http://localhost:5000${path
-                .split("/")
-                .map((segment) => encodeURIComponent(segment))
-                .join("/")}`;
+              logoSrc = assetUrl(path);
             }
           }
 

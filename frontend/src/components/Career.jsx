@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { careerPageStyles as s } from '../assets/dummyStyles'
 import axios from 'axios';
+import { apiUrl } from '../utils/api';
 
 
 const Career = () => {
@@ -11,7 +12,7 @@ const Career = () => {
     useEffect(() => {
         const fetchCompanies = async () => {
             try{
-                const res = await axios.get(" http://localhost:5000/api/company");
+                const res = await axios.get(apiUrl('/company'));
                 setCompanies(res.data.companies);
 
             } catch (error) {

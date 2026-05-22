@@ -4,6 +4,7 @@ import { companyPageStyles as s } from '../assets/dummyStyles';
 import Toast from './Toast';
 import { Bookmark, Building2, Calendar, ChevronDown, ChevronUp, CircleDashed, Lightbulb } from 'lucide-react';
 import axios from 'axios';
+import { apiUrl } from '../utils/api';
 
 const STORAGE_KEY = 'savedQuestionIds';
 const ToastImport = Toast;
@@ -42,7 +43,7 @@ const CompanyPage = () => {
     const fetchCompanies = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/interview/companies"
+          apiUrl('/interview/companies')
         );
 
         if (response?.data?.success) {
@@ -71,7 +72,7 @@ const CompanyPage = () => {
         const token = rawUser ? JSON.parse(rawUser).token : null;
         if(!token) return;
 
-        const res = await fetch("http://localhost:5000/api/saved", {
+        const res = await fetch(apiUrl('/saved'), {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -103,7 +104,7 @@ useEffect(() => {
     setLoading(true);
     try{
       const response = await axios.get(
-        `http://localhost:5000/api/interview/company/${selectedCompany}`
+        apiUrl(`/interview/company/${selectedCompany}`)
       );
       if (response?.data?.success) {
         setInterviewQuestions(response.data.questions || []);
@@ -137,7 +138,7 @@ const toggleSave = async (id, openSaved = false) => {
       }
 
       const res = await fetch(
-        `http://localhost:5000/api/saved/question/${id}?type=interview`,
+        apiUrl(`/saved/question/${id}?type=interview`),
         {
           method: "POST",
           headers: {

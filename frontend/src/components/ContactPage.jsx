@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { contactPageStyles as s } from '../assets/dummyStyles'
 import { Briefcase, Mail, MapPin, MessageSquare, Phone, User, Send } from 'lucide-react';
+import { apiUrl } from '../utils/api';
 
 
 
@@ -118,7 +119,7 @@ const ContactPage = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/inquiry", {
+      const res = await fetch(apiUrl('/inquiry'), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { navbarStyles as s } from '../assets/dummyStyles'
 import logo from '../assets/logo.png'
 import { Home, Search, Briefcase, UserCog, Bookmark, UserPen, LogOut, LogIn, ChevronUp, ChevronDown, User, X, Menu } from "lucide-react";
+import { apiUrl } from '../utils/api';
 
 
 const navItems = [
@@ -129,7 +130,7 @@ useEffect(() => {
 
       if (parsed && (!parsed.name || !parsed.email) && parsed.token) {
         try {
-          const res = await fetch("http://localhost:5000/api/user/profile", {
+          const res = await fetch(apiUrl('/user/profile'), {
             headers: { Authorization: `Bearer ${parsed.token}` },
           });
           const data = await res.json();

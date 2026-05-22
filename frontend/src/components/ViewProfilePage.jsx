@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Edit3, FileText, Loader2, Mail, Phone, Save, Trash2, Upload, User, X } from 'lucide-react'
 import { viewProfilePageStyles as s} from '../assets/dummyStyles'
+import { apiUrl } from '../utils/api';
 
 // toast
 const Toast = ({ message, type = "success" , onClose }) => {
@@ -53,7 +54,7 @@ const ViewProfilePage = () => {
     const fetchProfile = async () => {
       try {
         const user = JSON.parse(localStorage.getItem('jobportal_user'));
-        const res = await fetch("http://localhost:5000/api/user/profile", {
+        const res = await fetch(apiUrl('/user/profile'), {
           headers: {
             Authorization: `Bearer ${user.token}`,
           }
@@ -144,7 +145,7 @@ const handleSave = async () => {
       if (profile.resume instanceof File) {
         formData.append("resume", profile.resume);
       }
-      const res = await fetch("http://localhost:5000/api/user/profile", {
+      const res = await fetch(apiUrl('/user/profile'), {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -195,7 +196,7 @@ const handleSave = async () => {
       const url = URL.createObjectURL(profile.resume);
       window.open(url, "_blank");
     } else if (typeof profile.resume === "string") {
-      const fullUrl = `http://localhost:5000/api/user/resume/${originalProfile._id}`;
+      const fullUrl = apiUrl(`/user/resume/${originalProfile._id}`);
 
       const link = document.createElement("a");
       link.href = fullUrl;

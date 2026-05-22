@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Toast from "./Toast";
 import { rolePageStyles as s } from "../assets/dummyStyles";
+import { apiUrl } from '../utils/api';
 
 const STORAGE_KEY = "savedQuestionIds";
 
@@ -71,7 +72,7 @@ const RolePage = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/interview/roles");
+        const res = await fetch(apiUrl('/interview/roles'));
         const data = await res.json();
         if (data.success && data.roles) {
           setRoles(data.roles);
@@ -107,9 +108,7 @@ const RolePage = () => {
       if (!selectedRoleId) return;
       setLoadingQuestions(true);
       try {
-        const res = await fetch(
-          `http://localhost:5000/api/interview/role/${selectedRoleId}`,
-        );
+        const res = await fetch(apiUrl(`/interview/role/${selectedRoleId}`));
         const data = await res.json();
         if (data.success) {
           setQuestions(data.questions);
@@ -130,7 +129,7 @@ const RolePage = () => {
         const token = rawUser ? JSON.parse(rawUser).token : null;
         if (!token) return;
 
-        const res = await fetch("http://localhost:5000/api/saved", {
+        const res = await fetch(apiUrl('/saved'), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -177,7 +176,7 @@ const RolePage = () => {
       }
 
       const res = await fetch(
-        `http://localhost:5000/api/saved/question/${id}?type=role`,
+        apiUrl(`/saved/question/${id}?type=role`),
         {
           method: "POST",
           headers: {

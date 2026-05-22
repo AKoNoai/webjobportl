@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { interviewQuestionsStyles as s } from "../assets/dummyStyles";
 import { Link } from 'react-router-dom';
 import { ChevronRight, CircleArrowOutUpRight } from 'lucide-react';
+import { apiUrl } from '../utils/api';
 
 const slugify = (str) =>
   str
@@ -25,8 +26,8 @@ const InterviewQuestion = () => {
       setLoading(true);
       try {
         const [companiesRes, rolesRes] = await Promise.all([
-          fetch("http://localhost:5000/api/interview/companies"),
-          fetch("http://localhost:5000/api/interview/roles"),
+          fetch(apiUrl('/interview/companies')),
+          fetch(apiUrl('/interview/roles')),
         ]);
 
         const companiesData = await companiesRes.json();
