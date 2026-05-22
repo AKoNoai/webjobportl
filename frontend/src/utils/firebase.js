@@ -13,13 +13,13 @@ const localFirebaseConfig = {
 };
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || (import.meta.env.DEV ? localFirebaseConfig.apiKey : undefined),
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || (import.meta.env.DEV ? localFirebaseConfig.authDomain : undefined),
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || (import.meta.env.DEV ? localFirebaseConfig.projectId : undefined),
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || (import.meta.env.DEV ? localFirebaseConfig.storageBucket : undefined),
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || (import.meta.env.DEV ? localFirebaseConfig.messagingSenderId : undefined),
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || (import.meta.env.DEV ? localFirebaseConfig.appId : undefined),
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || (import.meta.env.DEV ? localFirebaseConfig.measurementId : undefined),
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || localFirebaseConfig.apiKey,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || localFirebaseConfig.authDomain,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || localFirebaseConfig.projectId,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || localFirebaseConfig.storageBucket,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || localFirebaseConfig.messagingSenderId,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || localFirebaseConfig.appId,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || localFirebaseConfig.measurementId,
 };
 
 const missingConfigKeys = Object.entries(firebaseConfig)
@@ -27,8 +27,8 @@ const missingConfigKeys = Object.entries(firebaseConfig)
   .map(([key]) => key);
 
 if (missingConfigKeys.length > 0) {
-  throw new Error(
-    `Missing Firebase config for production: ${missingConfigKeys.join(", ")}. Set the VITE_FIREBASE_* env vars in Vercel.`
+  console.warn(
+    `Using fallback Firebase config because these env vars are missing: ${missingConfigKeys.join(", ")}. Set VITE_FIREBASE_* in Vercel to match your Firebase project.`
   );
 }
 
