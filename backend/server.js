@@ -17,6 +17,15 @@ import inquiryRouter from "./routers/inquiry.routers.js";
 const PORT = 5000;
 const app = express();
 
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.ADMIN_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+].filter(Boolean);
+
+const vercelPreviewOrigin = /^https:\/\/.*\.vercel\.app$/;
+
 
 
 //DB
@@ -24,12 +33,16 @@ connectDB();
 
 //Middleware
 app.use(express.json());
-app.use(cors(
-  {
-    origin: ["http://localhost:5173", "http://localhost:5174"],
-    credentials: true
-  }
-));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || vercelPreviewOrigin.test(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
+  credentials: true,
+}));
 
 
 
