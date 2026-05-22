@@ -29,8 +29,9 @@ export const getApplicationProfileStatus = async (token) => {
     const cachedUser = JSON.parse(localStorage.getItem(STORAGE_USER_KEY) || "{}");
     const profilePhone = data.user?.phone || cachedUser.phone || "";
     const profileResume = data.user?.resume || cachedUser.resume || "";
+    const profileResumePublicId = data.user?.resumePublicId || cachedUser.resumePublicId || "";
 
-    if (!profilePhone || !profileResume) {
+    if (!profilePhone || (!profileResume && !profileResumePublicId)) {
       return {
         canApply: false,
         message: "Please complete your profile (add phone and resume) before applying.",
@@ -41,6 +42,7 @@ export const getApplicationProfileStatus = async (token) => {
       canApply: true,
       profilePhone,
       profileResume,
+      profileResumePublicId,
     };
   } catch {
     return {
