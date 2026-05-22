@@ -36,18 +36,6 @@ export const applyJob = async (req, res) => {
             });
         }
 
-        // kiểm tra xem người dùng đã cập nhật đủ hồ sơ chưa
-        const user = await User.findById(userId).select("phone resume resumePublicId");
-        const hasPhone = Boolean(user?.phone?.trim());
-        const hasResume = Boolean(user?.resume?.trim() || user?.resumePublicId?.trim());
-
-        if (!user || !hasPhone || !hasResume) {
-            return res.status(400).json({
-                success: false,
-                message: "Vui lòng cập nhật số điện thoại và tải CV/hồ sơ lên trước khi nộp đơn",
-            });
-        }
-
         const newapplication = new Application({
             job: jobId,
             user: userId,
