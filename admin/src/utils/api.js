@@ -1,10 +1,18 @@
 const rawApiBaseUrl = import.meta.env.VITE_API_URL?.trim().replace(/\/$/, "");
 
-const API_BASE_URL = rawApiBaseUrl || (import.meta.env.DEV ? "http://localhost:5000/api" : "/api");
+const isLocalhostUrl = (value) =>
+  /^https?:\/\/(localhost|127(?:\.\d{1,3}){3})(?::\d+)?(?:\/|$)/i.test(value);
+
+const API_BASE_URL =
+  rawApiBaseUrl && !(import.meta.env.PROD && isLocalhostUrl(rawApiBaseUrl))
+    ? rawApiBaseUrl
+    : import.meta.env.DEV
+      ? "http://localhost:5000/api"
+      : "/_/backend/api";
 
 const API_ORIGIN = API_BASE_URL.startsWith("http")
   ? API_BASE_URL.replace(/\/api$/, "").replace(/\/$/, "")
-  : window.location.origin;
+  : `${window.location.origin}${API_BASE_URL.replace(/\/api$/, "")}`;
 
 export const apiUrl = (path = "") => {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
