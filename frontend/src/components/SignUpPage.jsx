@@ -148,6 +148,9 @@ const SignUpPage = () => {
       }, 700);
     } catch (error) {
       const firebaseMessage =
+        error?.code === "auth/unauthorized-domain"
+          ? `Firebase has not authorized ${window.location.hostname} for Google sign-in. Add this domain in Firebase Console > Authentication > Settings > Authorized domains.`
+          :
         error?.code === "auth/popup-closed-by-user"
           ? "Bạn đã đóng cửa sổ đăng nhập Google"
           : null;
