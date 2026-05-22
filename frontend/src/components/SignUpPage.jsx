@@ -7,6 +7,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase.js";
 import { FcGoogle } from 'react-icons/fc';
 import { getGoogleSignInErrorMessage } from "../utils/authErrors";
+import { getCanonicalFrontendOrigin, redirectToCanonicalFrontend } from "../utils/googleAuthOrigin";
 
 
 const STORAGE_KEY = 'jobportal_user'
@@ -125,6 +126,13 @@ const SignUpPage = () => {
   };
 
   const handleGoogleContinue = async () => {
+    const canonicalOrigin = getCanonicalFrontendOrigin();
+
+    if (canonicalOrigin !== window.location.origin) {
+      redirectToCanonicalFrontend("/signup");
+      return;
+    }
+
     try {
       setIsLoading(true);
       const result = await signInWithPopup(auth, provider);
