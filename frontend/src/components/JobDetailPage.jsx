@@ -15,7 +15,7 @@ import {
 import Toast from "./Toast";
 import { jobDetailPageStyles as s } from "../assets/dummyStyles";
 import { apiUrl, assetUrl } from '../utils/api';
-import { isAlreadyAppliedMessage } from '../utils/application';
+import { getApplicationProfileStatus, isAlreadyAppliedMessage } from '../utils/application';
 
 const STORAGE_USER_KEY = "jobportal_user";
 const STORAGE_JOBS_KEY = "savedJobs";
@@ -263,19 +263,11 @@ const JobDetailPage = () => {
         return;
       }
 
-      const res = await fetch(apiUrl('/user/profile'), {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      const cachedUser = JSON.parse(localStorage.getItem(STORAGE_USER_KEY) || '{}');
-      const profilePhone = data.user?.phone || cachedUser.phone || "";
-      const profileResume = data.user?.resume || cachedUser.resume || "";
-
-      if (data.success && (!profilePhone || !profileResume)) {
+      const profileStatus = await getApplicationProfileStatus(token);
+      if (!profileStatus.canApply) {
         setToast({
           show: true,
-          message:
-            "Please complete your profile (add phone and resume) before applying.",
+          message: profileStatus.message,
           type: "error",
         });
         return;
@@ -315,6 +307,17 @@ const JobDetailPage = () => {
         setToast({
           show: true,
           message: "Please login to apply for this job.",
+          type: "error",
+        });
+        closeConfirmToast();
+        return;
+      }
+
+      const profileStatus = await getApplicationProfileStatus(token);
+      if (!profileStatus.canApply) {
+        setToast({
+          show: true,
+          message: profileStatus.message,
           type: "error",
         });
         closeConfirmToast();
