@@ -6,6 +6,7 @@ import { ArrowLeft, CheckCircle, Eye, EyeOff, Lock, Mail, ShieldCheck, User, X }
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase.js";
 import { FcGoogle } from 'react-icons/fc';
+import { getGoogleSignInErrorMessage } from "../utils/authErrors";
 
 
 const STORAGE_KEY = 'jobportal_user'
@@ -147,16 +148,8 @@ const SignUpPage = () => {
         navigate('/');
       }, 700);
     } catch (error) {
-      const firebaseMessage =
-        error?.code === "auth/unauthorized-domain"
-          ? `Firebase has not authorized ${window.location.hostname} for Google sign-in. Add this domain in Firebase Console > Authentication > Settings > Authorized domains.`
-          :
-        error?.code === "auth/popup-closed-by-user"
-          ? "Bạn đã đóng cửa sổ đăng nhập Google"
-          : null;
-
       setToast({
-        message: firebaseMessage || error.response?.data?.message || "Không thể tiếp tục bằng Google",
+        message: getGoogleSignInErrorMessage(error),
         type: "error",
       });
     } finally {
