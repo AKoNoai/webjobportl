@@ -54,6 +54,7 @@ const ViewProfilePage = () => {
     const fetchProfile = async () => {
       try {
         const user = JSON.parse(localStorage.getItem('jobportal_user'));
+        const cachedUser = JSON.parse(localStorage.getItem('jobportal_user') || '{}');
         const res = await fetch(apiUrl('/user/profile'), {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -64,10 +65,10 @@ const ViewProfilePage = () => {
         const data = await res.json();
         const userData = data.user || data;
         const nextProfile = {
-          name: userData.name || "",
-          email: userData.email || "",
-          phone: userData.phone || "",
-          resume: userData.resume || null,
+          name: userData.name || cachedUser.name || "",
+          email: userData.email || cachedUser.email || "",
+          phone: userData.phone || cachedUser.phone || "",
+          resume: userData.resume || cachedUser.resume || null,
         };
 
         setProfile(nextProfile);
@@ -164,7 +165,10 @@ const handleSave = async () => {
         name: savedUser.name || profile.name,
         email: savedUser.email || profile.email,
         phone: savedUser.phone || profile.phone,
-        resume: savedUser.resume || profile.resume || null,
+        resume:
+          savedUser.resume ||
+          (profile.resume instanceof File ? profile.resume.name : profile.resume) ||
+          null,
       };
 
       setProfile({
