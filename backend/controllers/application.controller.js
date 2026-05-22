@@ -26,9 +26,7 @@ export const applyJob = async (req, res) => {
 
         // kiểm tra xem người dùng đã nộp đơn cho công việc này chưa
         const user = await User.findById(userId);
-        const hasResume = Boolean(user?.resume || user?.resumePublicId);
-        const hasPhone = Boolean(user?.phone);
-        if (!user || !hasPhone || !hasResume) {
+        if (!user || !user.phone || !user.resume) {
             return res.status(400).json({
                 success: false,
                 message: "Vui lòng cập nhật hồ sơ cá nhân trước khi nộp đơn",

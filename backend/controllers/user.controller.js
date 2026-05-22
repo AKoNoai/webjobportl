@@ -35,17 +35,6 @@ export const updateProfile = async (req, res) => {
         if (email) updateData.email = email;
         if (phone) updateData.phone = phone;
 
-        if (typeof req.body.resume === "string" && req.body.resume.trim()) {
-            const resumeUrl = req.body.resume.trim();
-            updateData.resume = resumeUrl;
-
-            const resumeType = resumeUrl.includes('/raw') ? "raw" : "image";
-            const publicId = getPublicIdFromUrl(resumeUrl, resumeType);
-            if (publicId) {
-                updateData.resumePublicId = publicId;
-            }
-        }
-
         // Cập nhật sơ yếu lý lịch cho người tìm việc
         if (req.file && req.user.role === "user") {
             const originalName = req.file.originalname;

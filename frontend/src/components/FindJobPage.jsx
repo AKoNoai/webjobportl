@@ -231,7 +231,7 @@ const FindJobPage = () => {
       const data = await res.json();
       const cachedUser = JSON.parse(localStorage.getItem(STORAGE_USER_KEY) || '{}');
       const profilePhone = data.user?.phone || cachedUser.phone || "";
-      const profileResume = data.user?.resume || data.user?.resumePublicId || cachedUser.resume || cachedUser.resumePublicId || "";
+      const profileResume = data.user?.resume || cachedUser.resume || "";
 
       if (data.success && (!profilePhone || !profileResume)) {
         setToast({

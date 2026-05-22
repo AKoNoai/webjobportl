@@ -145,10 +145,6 @@ const handleSave = async () => {
       formData.append("email", profile.email);
       formData.append("phone", profile.phone);
 
-      if (typeof profile.resume === "string" && profile.resume.trim()) {
-        formData.append("resume", profile.resume.trim());
-      }
-
       if (profile.resume instanceof File) {
         formData.append("resume", profile.resume);
       }
