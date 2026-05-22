@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { FiCheckCircle as CheckCircle, FiArrowDown, FiEye as Eye, FiEyeOff as EyeOff, FiMail as Mail, FiLock as Lock, FiLogIn as LogIn, FiX as X } from 'react-icons/fi';
+import { FcGoogle } from 'react-icons/fc';
 import {loginPageStyles as s} from "../assets/dummyStyles";
 import API from '../utils/api';
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../utils/firebase.js";
 
 const STORAGE_KEY = "jobportal_user";
 
@@ -100,8 +103,7 @@ const LoginPage = () => {
       setIsLoading(true);
       const res = await API.post("/auth/login", { email, password });
       const userData = {
-        name: res.data.name,
-        email: res.data.email,
+        ...res.data.user,
         token: res.data.token,
       }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
@@ -121,6 +123,44 @@ const LoginPage = () => {
         message: error.response?.data?.message || "Email hoặc mật khẩu không đúng", 
         type: "error" 
     });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const idToken = credential?.idToken;
+
+      if (!idToken) {
+        throw new Error("Không lấy được Google ID token");
+      }
+
+      const res = await API.post("/auth/google-login", { idToken });
+      const userData = {
+        ...res.data.user,
+        token: res.data.token,
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+      setToast({ message: "Đăng nhập Google thành công!", type: "success" });
+
+      setTimeout(() => {
+        navigate("/");
+      }, 700);
+    } catch (error) {
+      const firebaseMessage =
+        error?.code === "auth/popup-closed-by-user"
+          ? "Bạn đã đóng cửa sổ đăng nhập Google"
+          : null;
+
+      setToast({
+        message: firebaseMessage || error.response?.data?.message || "Không thể đăng nhập bằng Google",
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -271,6 +311,23 @@ const handleResetPassword = async (e) => {
                               </>
                               )}
                           </button>
+
+                          <div className={s.dividerWrapper}>
+                            <div className={s.dividerLine} />
+                            <span className={s.dividerText}>or</span>
+                            <div className={s.dividerLine} />
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={handleGoogleSignIn}
+                            className={s.googleButton}
+                            disabled={isLoading}
+                          >
+                            <FcGoogle className="w-5 h-5" />
+                            <span>{isLoading ? "Please wait..." : "Continue with Google"}</span>
+                          </button>
+
                     </form>
                     </>
                 )}

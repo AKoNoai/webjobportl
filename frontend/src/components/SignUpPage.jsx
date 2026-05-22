@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import { signUpPageStyles as s} from '../assets/dummyStyles'
 import API from '../utils/api'
 import { ArrowLeft, CheckCircle, Eye, EyeOff, Lock, Mail, ShieldCheck, User, X } from "lucide-react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../utils/firebase.js";
+import { FcGoogle } from 'react-icons/fc';
 
 
 const STORAGE_KEY = 'jobportal_user'
@@ -114,6 +117,44 @@ const SignUpPage = () => {
       setToast({ 
         message: err.response?.data?.message || "SignUp Failed", 
         type: "error" 
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleContinue = async () => {
+    try {
+      setIsLoading(true);
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const idToken = credential?.idToken;
+
+      if (!idToken) {
+        throw new Error("Không lấy được Google ID token");
+      }
+
+      const res = await API.post('/auth/google-login', { idToken });
+      const userData = {
+        ...res.data.user,
+        token: res.data.token,
+      };
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+      setToast({ message: "Đăng nhập Google thành công!", type: "success" });
+
+      setTimeout(() => {
+        navigate('/');
+      }, 700);
+    } catch (error) {
+      const firebaseMessage =
+        error?.code === "auth/popup-closed-by-user"
+          ? "Bạn đã đóng cửa sổ đăng nhập Google"
+          : null;
+
+      setToast({
+        message: firebaseMessage || error.response?.data?.message || "Không thể tiếp tục bằng Google",
+        type: "error",
       });
     } finally {
       setIsLoading(false);
@@ -338,6 +379,23 @@ return (
                       </>
                     )}
                   </button>
+
+                  <div className={s.dividerWrapper}>
+                    <div className={s.dividerLine} />
+                    <span className={s.dividerText}>or</span>
+                    <div className={s.dividerLine} />
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={isLoading}
+                    onClick={handleGoogleContinue}
+                    className={s.googleButton}
+                  >
+                    <FcGoogle className="w-5 h-5" />
+                    <span>{isLoading ? "Please wait..." : "Continue with Google"}</span>
+                  </button>
+
                 </form>
               )}
 

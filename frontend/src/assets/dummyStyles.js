@@ -1362,6 +1362,15 @@ export const loginPageStyles = {
   submitButtonForgot:
     "w-full bg-linear-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 rounded-full hover:scale-105 transition-all shadow-lg",
 
+  // ==================== Social Login ====================
+  dividerWrapper: "flex items-center gap-3",
+  dividerLine: "h-px flex-1 bg-gray-200",
+  dividerText: "text-xs uppercase tracking-wider text-gray-400",
+  googleButton:
+    "w-full cursor-pointer border border-gray-200 bg-white text-gray-700 font-semibold py-3 rounded-full hover:bg-gray-50 transition-all disabled:opacity-50 flex items-center justify-center gap-2",
+  facebookButton:
+    "w-full cursor-pointer bg-[#1877F2] text-white font-semibold py-3 rounded-full hover:bg-[#166fe5] transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-md shadow-blue-500/20",
+
   // ==================== Secondary Buttons ====================
   secondaryButton:
     "w-full text-sm text-gray-500 hover:text-gray-700 transition font-medium",
@@ -1765,6 +1774,15 @@ export const signUpPageStyles = {
   verifyButton:
     "w-full cursor-pointer bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-full transition duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-indigo-500/30",
   buttonIcon: "w-4 h-4 sm:w-5 sm:h-5",
+
+  // Social auth
+  dividerWrapper: "flex items-center gap-3",
+  dividerLine: "h-px flex-1 bg-gray-200",
+  dividerText: "text-xs uppercase tracking-wider text-gray-400",
+  googleButton:
+    "w-full cursor-pointer border border-gray-200 bg-white text-gray-700 font-semibold py-3 rounded-full hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2",
+  facebookButton:
+    "w-full cursor-pointer bg-[#1877F2] text-white font-semibold py-3 rounded-full hover:bg-[#166fe5] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-md shadow-blue-500/20",
 
   // Resend link
   resendLink: "text-center",
