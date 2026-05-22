@@ -58,11 +58,13 @@ export const updateProfile = async (req, res) => {
             }
         }
 
-        const user = await User.findByIdAndUpdate(
-            req.user.id, 
-            updateData, 
-            {returnDocument: "after"}
-        ).select("-password");
+        await User.findByIdAndUpdate(
+            req.user.id,
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        const user = await User.findById(req.user.id).select("-password");
 
         return res.status(200).json({
             success: true,
