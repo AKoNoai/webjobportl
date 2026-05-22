@@ -10,7 +10,7 @@ const API_BASE_URL =
         ? rawApiBaseUrl
         : import.meta.env.DEV
             ? "http://localhost:5000/api"
-            : "/_/backend/api";
+            : "https://webjobportl-backend.vercel.app/api";
 
 const API = axios.create({
     baseURL: API_BASE_URL,
