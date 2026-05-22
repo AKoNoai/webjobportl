@@ -7,7 +7,7 @@ import ListJob from './pages/ListJob';
 import CompanyPage from './pages/CompanyPage';
 import CompanyQuestion from './pages/CompanyQuestion';
 import ListCompanyQs from './pages/ListCompanyQs';
-import RoleQuestion from './pages/RoleQuestion';
+import RoleQuestion from './pages/RoleQuestion'
 import ListRoleQs from './pages/ListRoleQs';
 import ApplicantsPage from './pages/ApplicantsPage';
 import {SquareArrowUp} from 'lucide-react';
