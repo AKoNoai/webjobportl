@@ -5,7 +5,7 @@ export const getGoogleSignInErrorMessage = (error) => {
     const canonicalOrigin = getCanonicalFrontendOrigin();
 
     if (canonicalOrigin !== window.location.origin) {
-      return `You are on a Vercel preview URL (${window.location.origin}). Google sign-in will use ${canonicalOrigin} instead. If that domain is still blocked, add it in Firebase Console > Authentication > Settings > Authorized domains.`;
+      return `You are on a Vercel preview URL (${window.location.origin}). Google sign-in will use ${canonicalOrigin} instead. Add ${canonicalOrigin} to Firebase Console > Authentication > Settings > Authorized domains.`;
     }
 
     return `Firebase has not authorized ${window.location.origin} for Google sign-in. Add this exact origin in Firebase Console > Authentication > Settings > Authorized domains.`;

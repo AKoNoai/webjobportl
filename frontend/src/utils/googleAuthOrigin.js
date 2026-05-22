@@ -1,5 +1,7 @@
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
 
+const DEFAULT_PRODUCTION_ORIGIN = "https://webjobportl-fronend.vercel.app";
+
 const deriveVercelProductionOrigin = (origin) => {
   try {
     const url = new URL(origin);
@@ -30,7 +32,17 @@ export const getCanonicalFrontendOrigin = () => {
     return configuredOrigin;
   }
 
-  return deriveVercelProductionOrigin(window.location.origin);
+  const derivedOrigin = deriveVercelProductionOrigin(window.location.origin);
+
+  if (derivedOrigin !== window.location.origin) {
+    return derivedOrigin;
+  }
+
+  if (window.location.hostname.endsWith(".vercel.app")) {
+    return DEFAULT_PRODUCTION_ORIGIN;
+  }
+
+  return derivedOrigin;
 };
 
 export const redirectToCanonicalFrontend = (routePath = "/") => {
