@@ -63,13 +63,15 @@ const ViewProfilePage = () => {
 
         const data = await res.json();
         const userData = data.user || data;
-        setProfile({
+        const nextProfile = {
           name: userData.name || "",
           email: userData.email || "",
           phone: userData.phone || "",
           resume: userData.resume || null,
-        })
-        setOriginalProfile(userData);
+        };
+
+        setProfile(nextProfile);
+        setOriginalProfile({ ...userData, ...nextProfile });
 
         
       } catch (err) {
@@ -156,13 +158,30 @@ const handleSave = async () => {
       if (!res.ok) {
         throw new Error(data.message || "Update failed");
       }
+
+      const savedUser = data.user || {};
+      const nextProfile = {
+        name: savedUser.name || profile.name,
+        email: savedUser.email || profile.email,
+        phone: savedUser.phone || profile.phone,
+        resume: savedUser.resume || profile.resume || null,
+      };
+
       setProfile({
-        name: data.user.name,
-        email: data.user.email,
-        phone: data.user.phone,
-        resume: data.user.resume,
+        ...nextProfile,
       });
-      setOriginalProfile(data.user);
+      setOriginalProfile({ ...savedUser, ...nextProfile });
+
+      localStorage.setItem(
+        "jobportal_user",
+        JSON.stringify({
+          ...user,
+          ...savedUser,
+          ...nextProfile,
+          token: user.token,
+        })
+      );
+
       setIsEditing(false);
       setToast({ message: "profile updated!", type: "success" });
     } catch (err) {
@@ -271,7 +290,7 @@ const handleSave = async () => {
                 Full Name <span className={s.requiredStar}>*</span>
               </label>
 
-              {!isEditing ? (
+              {isEditing ? (
                 <input type="text" name="name" value={profile.name}
                 onChange={handleChange} className={s.input} placeholder="John Doe"
                 required />
@@ -286,7 +305,7 @@ const handleSave = async () => {
                 Email Address <span className={s.requiredStar}>*</span>
               </label>
 
-              {!isEditing ? (
+              {isEditing ? (
                 <input type="email" name="email" value={profile.email}
                 onChange={handleChange} className={s.input} placeholder="john@example.com"
                 required />
@@ -301,9 +320,9 @@ const handleSave = async () => {
                 Phone <span className={s.requiredStar}>*</span>
               </label>
 
-              {!isEditing ? (
+              {isEditing ? (
                 <input type="tel" name="phone" value={profile.phone}
-                onChange={handleChange} className={s.input} placeholder="123 456 7890"
+                onChange={handlePhoneChange} className={s.input} placeholder="1234567890"
                 maxLength={10}
                 required />
               ) : (
@@ -348,7 +367,7 @@ const handleSave = async () => {
                   </div>
                   {profile.resume && (
                     <p className={s.resumeSuccessText}>
-                      File uploaded: {profile.resume.name || "Uploaded Resume"}
+                      File selected: {profile.resume.name || "Uploaded Resume"}
                     </p>
                   )}
                 </div>
