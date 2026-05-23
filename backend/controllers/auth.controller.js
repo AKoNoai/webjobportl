@@ -8,9 +8,14 @@ const createAuthToken = (user) =>
     jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
 const buildAuthUser = (user) => ({
+    _id: user._id,
     name: user.name,
     email: user.email,
+    phone: user.phone,
     role: user.role,
+    resume: user.resume,
+    resumePublicId: user.resumePublicId,
+    isVerified: user.isVerified,
 });
 
 const verifyGoogleIdToken = async (idToken) => {

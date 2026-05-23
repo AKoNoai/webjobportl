@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Edit3, FileText, Loader2, Mail, Phone, Save, Trash2, Upload, User, X } from 'lucide-react'
 import { viewProfilePageStyles as s} from '../assets/dummyStyles'
 import { apiUrl } from '../utils/api';
+import { getCachedProfile, mergeProfileFromCache, setCachedProfile } from '../utils/profileCache';
 
 // toast
 const Toast = ({ message, type = "success" , onClose }) => {
@@ -55,6 +56,7 @@ const ViewProfilePage = () => {
       try {
         const user = JSON.parse(localStorage.getItem('jobportal_user'));
         const cachedUser = JSON.parse(localStorage.getItem('jobportal_user') || '{}');
+        const profileCache = getCachedProfile(cachedUser.email || user?.email || "") || {};
         const res = await fetch(apiUrl('/user/profile'), {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -64,15 +66,18 @@ const ViewProfilePage = () => {
 
         const data = await res.json();
         const userData = data.user || data;
-        const nextProfile = {
+        const nextProfile = mergeProfileFromCache({
           name: userData.name || cachedUser.name || "",
           email: userData.email || cachedUser.email || "",
-          phone: userData.phone || cachedUser.phone || "",
-          resume: userData.resume || cachedUser.resume || null,
-        };
+          phone: userData.phone || cachedUser.phone || profileCache.phone || "",
+          resume: userData.resume || cachedUser.resume || profileCache.resume || null,
+          resumePublicId:
+            userData.resumePublicId || cachedUser.resumePublicId || profileCache.resumePublicId || "",
+        });
 
         setProfile(nextProfile);
         setOriginalProfile({ ...userData, ...nextProfile });
+        setCachedProfile(nextProfile);
 
         
       } catch (err) {
@@ -189,6 +194,12 @@ const handleSave = async () => {
           token: user.token,
         })
       );
+      setCachedProfile({
+        ...user,
+        ...savedUser,
+        ...nextProfile,
+        token: user.token,
+      });
 
       setIsEditing(false);
       setToast({ message: "profile updated!", type: "success" });

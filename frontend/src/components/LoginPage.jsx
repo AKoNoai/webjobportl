@@ -8,6 +8,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../utils/firebase.js";
 import { getGoogleSignInErrorMessage } from "../utils/authErrors";
 import { getCanonicalFrontendOrigin, redirectToCanonicalFrontend } from "../utils/googleAuthOrigin";
+import { mergeProfileFromCache, setCachedProfile } from "../utils/profileCache";
 
 const STORAGE_KEY = "jobportal_user";
 
@@ -154,7 +155,10 @@ const LoginPage = () => {
         token: res.data.token,
       };
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+      const mergedUserData = mergeProfileFromCache(userData);
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedUserData));
+      setCachedProfile(mergedUserData);
       setToast({ message: "Đăng nhập Google thành công!", type: "success" });
 
       setTimeout(() => {
